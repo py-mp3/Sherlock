@@ -55,7 +55,7 @@ def signup():
 # Creating the username label and entry
 username_label = tk.Label(window, text="Username:")
 username_label.pack()
-username_entry = tk.Entry(window)
+username_entry = tk.Entry(window)#t
 username_entry.pack()
 
 # Creating the password label and entry
