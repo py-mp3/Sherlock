@@ -18,21 +18,31 @@ cursor = connection.cursor()
 class App(CTk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.title("Login/Sign-up Tab")
         def signup():
-
+            x = 0
             username = user_entry.get()
             password = pass_entry.get()
 
-            cursor.execute("SELECT * FROM users WHERE username=%s", (username,))
-            user = cursor.fetchone()
 
-            if user:
-                msg.showerror("Signup Failed", "Username already exists")
+            if len(username) < 3:
+                msg.showerror("Username error","Username has length less than 3 ")
+                return
+            elif len(password) < 8:
+                msg.showerror("Password error","password has length less than 8 ")
+                return 
             else:
-                cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
-                connection.commit()
-                msg.showinfo("Signup Successful", "Account created successfully")
-                # root2.destroy()  # Close the window after signup
+                
+                cursor.execute("SELECT * FROM users WHERE username=%s", (username,))
+                user = cursor.fetchone()
+
+                if user:
+                    msg.showerror("Signup Failed", "Username already exists")
+                else:
+                    cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
+                    connection.commit()
+                    msg.showinfo("Signup Successful", "Account created successfully")
+            
 
         def login():    
             username = user_entry.get()
@@ -44,11 +54,23 @@ class App(CTk):
             if user:
                 if password == user[2]:
                     msg.showinfo("Login Successful", "Logged in successfully")
-                    # root2.destroy()  # Close the window after login
+                    file = open("userdata.txt" , "w")
+                    data = f"{username}\nauthenticated"
+                    file.write(data)
+                    file.close()
+                    self.destroy()
                 else:
                     msg.showerror("Login Failed", "Invalid password")
+                    file = open("userdata.txt" , "w")
+                    data = f"{username}\nunauthenticated"
+                    file.write(data)
+                    file.close()
             else:
                 msg.showerror("Login Failed", "Username does not exist")
+                file = open("userdata.txt" , "w")
+                data = f"{username}\n404"
+                file.write(data)
+                file.close()
  
         main_frame = CTkFrame(self, fg_color=self.cget("bg"))
         main_frame.grid(row=0, column=0, padx=10, pady=10)
@@ -82,6 +104,3 @@ class App(CTk):
         
  
     
-    
-app = App()
-app.mainloop()

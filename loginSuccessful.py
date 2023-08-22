@@ -2,9 +2,11 @@ import tkinter
 import customtkinter
 import requests as re
 from tkinter import ttk
-import loginSql 
-import loginSuccessful
 
+file = open('userdata.txt','r')
+info = file.readlines()
+username = info[0]
+title = f'Sherlock for {username}'
 
 class UserFinder:
     def __init__(self, urls_file):
@@ -31,14 +33,13 @@ class UserFinder:
 
         return results
 
-
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
         # configure window
         
-        self.title("Sherlock")
+        self.title(title)
         self.geometry(f"{1100}x580")
         self.mode = customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
         self.theme = customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -60,12 +61,6 @@ class App(customtkinter.CTk):
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="CustomTkinter",
                                                  font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
-        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame,text='Login', command=self.sidebar_button_event)
-        self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame,text= 'Sign-Up', command=self.sidebar_button_event)
-        self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
-        self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
-        self.appearance_mode_label.grid(row=5, column=0, padx=20, pady=(10, 0))
         self.appearance_mode_optionmenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"],
                                                                       command=self.change_appearance_mode_event)
         self.appearance_mode_optionmenu.grid(row=6, column=0, padx=20, pady=(10, 10))
@@ -112,29 +107,8 @@ class App(customtkinter.CTk):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
 
-    def sidebar_button_event(self):
-                
-        app = loginSql.App()
-        app.mainloop()
 
-        print("Running before exiting")
-
-        file = open("userdata.txt", "r")
-        info = file.readlines()
-        file.close()
-
-        if info[1] == "authenticated":
-            self.destroy()
-            file2 = open('username.txt','w')
-            username = info[0]
-            file2.write(username)
-
-            dashboard = loginSuccessful.App()
-            dashboard.mainloop()
-            
-            file2.close()
 
 if __name__ == "__main__":
     app = App()
     app.mainloop()
-

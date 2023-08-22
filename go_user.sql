@@ -8,5 +8,3 @@ create table users(id int AUTO_INCREMENT primary key , username varchar(50) uniq
 insert into users(username , password) values("shubh" , "scam1992");
 
 select * from users;
-
-create table user_data(id int AUTO_INCREMENT PRIMARY key , )
