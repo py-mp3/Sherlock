@@ -2,6 +2,7 @@ import tkinter
 from customtkinter import *
 import mysql.connector
 import tkinter.messagebox as msg
+import loginSuccessful
 
 
 connection = mysql.connector.connect(
@@ -16,7 +17,7 @@ cursor = connection.cursor()
 
  
 class App(CTk):
-    def __init__(self, *args, **kwargs):
+    def __init__(self,father, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.title("Login/Sign-up Tab")
         def signup():
@@ -59,6 +60,9 @@ class App(CTk):
                     file.write(data)
                     file.close()
                     self.destroy()
+                    father.destroy()
+                    app = loginSuccessful.App()
+                    app.mainloop()
                 else:
                     msg.showerror("Login Failed", "Invalid password")
                     file = open("userdata.txt" , "w")
